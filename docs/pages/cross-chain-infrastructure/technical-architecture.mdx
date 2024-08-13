@@ -1,0 +1,77 @@
+## Off-chain Routing
+
+Off-chain Routing algorithm computes the most optimal transaction routes. It can be called via the JS SDK, which is the recommended way of interacting with Concero API. The Routing data is then used by the SDK to compute call data for the user's wallet to execute.
+
+## Orchestrator contract
+
+The Orchestrator contract serves as an entrypoint for users or protocols to interact with Concero cross-chain infrastructure.
+It is responsible for managing the entire transaction on a single chain, allowing a user to perform multiple actions with a single function call.
+
+The actions include:
+1. Swaps on decentralised exchanges (single or multiple)
+2. Obtaining bridgeable tokens before bridging
+3. Interactions with other protocols (coming soon)
+
+The Orchestrator exposes the following interface for users and protocols to interact with the infrastructure:
+
+#### Swap
+Suitable for single-hop and multi-hop swaps on a single chain.
+
+[//]: # (todo: add supported DEXes)
+```solidity
+    function swap(
+        IDexSwap.SwapData[] calldata _swapData,
+        address _receiver
+    ) external;
+```
+
+#### Bridge
+Suitable for cross-chain bridging, where no swaps need to be performed on either of the chains.
+```solidity
+    function bridge(
+        IStorage.BridgeData memory bridgeData,
+        IDexSwap.SwapData[] memory dstSwapData
+    ) external;
+```
+#### Swap and Bridge
+Suitable for cross-chain transactions, where both swaps and bridging are required.
+```solidity
+    function swapAndBridge(
+        IStorage.BridgeData memory bridgeData,
+        IDexSwap.SwapData[] calldata srcSwapData,
+        IDexSwap.SwapData[] memory dstSwapData
+    ) external;
+```
+
+
+## DexSwap contract
+
+Only takes calls from the `Orchestrator` contract which contain an array of swaps that are required to be performed on the current chain. Executes each swap one-by-one on multiple dexes, in order to obtain a destination token.
+
+## Bridging & Settlement
+
+## Chainlink Functions
+
+Serve the purpose of fast-tracking transactions while CCIP is performing the 24-minute bridging.
+
+### SRC Functions
+
+Calls `addUnconfirmedTX()` function on the DST chain to indicate that a transaction has entered CCIP on the source chain. Uses a private key in DON-Hosted secrets in order to call the function via an allow-listed messenger wallet. The DST contract, which receives such call immediately begins the confirmation process by running an additional set of Chainlink Functions on the destination chain.
+
+### DST Functions
+
+The purpose of Destination chain ChainlinkFunctions is to confirm whether the transaction has indeed been submitted to the source chain and has successfully entered CCIP. Using Alchemy, Infura and other RPC providers inside the JS code, it performs an RPC call to read a specific event, which confirms that the transaction is being sent through CCIP.
+
+Additionally, DST functions are responsible for awaiting a certain amount of block confirmations before submitting a successful callback to the DST contract. The minimum of block confirmations depends on the risk factor of each transaction that enters the bridging infrastructure. This itself is a combination of weighted factors such as the amount of transactions, transaction history of the wallet, and any other anomalies that the transaction might have.
+
+## Chainlink CCIP
+
+Chainlink CCIP is chosen as a reliable and secure settlement layer due to its complex multi-layered architecture. As soon as funds enter CCIP on the SRC chain, a corresponding event is emitted and Chainlink Functions begin the acceleration process. When the funds have been taken from the liquidity pool in a form of a 24-minute loan, CCIP rebalances that pool by completing the transaction.
+
+## Liquidity pools
+
+Liquidity pools are a crucial part of Concero's fast-track solution, as they hold the liquidity necessary to be taken as a loan while CCIP is in process of bridging the assets. As soon as the transaction is confirmed by Chainlink Functions on the DST chain, the Orchestrator contract obtains a loan from the Liquidity pool and proceeds to execute all necessary actions, such as destination chain swaps. This is in order to send the destination asset to the user's wallet.
+
+## Orchestrator contract
+
+The Orchestrator contract serves as an operations manager for the entire on-chain system. It's isolating the environment from malicious actors, by exclusively operating each contract in a predetermined order, such that there is no possibility for the end user or any external entity to directly interact with internal contracts of our infrastructure. The Orchestrator provides a single external point of entry for the end user to facilitate cross-chain transactions.
