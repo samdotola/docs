@@ -1,54 +1,24 @@
-## Off-chain Routing
+# Architecture
+## Schematic overview
+![Cross-Chain Infrastructure Technical Overview Diagram](/cross-chain-infrastructure-technical-overview.jpg)
 
-Off-chain Routing algorithm computes the most optimal transaction routes. It can be called via the JS SDK, which is the recommended way of interacting with Concero API. The Routing data is then used by the SDK to compute call data for the user's wallet to execute.
+## Orchestrator contract (Main entrypoint)
+The Orchestrator contract serves as a single entrypoint for users or protocols to interact with Concero cross-chain infrastructure.
+Responsible for executing the entire transaction on a single chain, allowing a user to perform multiple actions with a single function call.
 
-## Orchestrator contract
+The actions the Orchestrator handles include:
+1. Swaps (single or multiple)
+2. Bridging
+3. Swaps and bridging
 
-The Orchestrator contract serves as an entrypoint for users or protocols to interact with Concero cross-chain infrastructure.
-It is responsible for managing the entire transaction on a single chain, allowing a user to perform multiple actions with a single function call.
+## Internal contracts
+### DexSwap
 
-The actions include:
-1. Swaps on decentralised exchanges (single or multiple)
-2. Obtaining bridgeable tokens before bridging
-3. Interactions with other protocols (coming soon)
+Serves as an adapter to various decentralised exchanges. Used internally by the `Orchestrator` in order to perform single-chain swaps.
 
-The Orchestrator exposes the following interface for users and protocols to interact with the infrastructure:
+### ConceroBridge
 
-#### Swap
-Suitable for single-hop and multi-hop swaps on a single chain.
-
-[//]: # (todo: add supported DEXes)
-```solidity
-    function swap(
-        IDexSwap.SwapData[] calldata _swapData,
-        address _receiver
-    ) external;
-```
-
-#### Bridge
-Suitable for cross-chain bridging, where no swaps need to be performed on either of the chains.
-```solidity
-    function bridge(
-        IStorage.BridgeData memory bridgeData,
-        IDexSwap.SwapData[] memory dstSwapData
-    ) external;
-```
-#### Swap and Bridge
-Suitable for cross-chain transactions, where both swaps and bridging are required.
-```solidity
-    function swapAndBridge(
-        IStorage.BridgeData memory bridgeData,
-        IDexSwap.SwapData[] calldata srcSwapData,
-        IDexSwap.SwapData[] memory dstSwapData
-    ) external;
-```
-
-
-## DexSwap contract
-
-Only takes calls from the `Orchestrator` contract which contain an array of swaps that are required to be performed on the current chain. Executes each swap one-by-one on multiple dexes, in order to obtain a destination token.
-
-## Bridging & Settlement
+Handles the cross-chain bridging process. Interacts with Chainlink CCIP and Chainlink Functions. Used internally by the `Orchestrator` in order to perform cross-chain transactions.
 
 ## Chainlink Functions
 
@@ -72,6 +42,6 @@ Chainlink CCIP is chosen as a reliable and secure settlement layer due to its co
 
 Liquidity pools are a crucial part of Concero's fast-track solution, as they hold the liquidity necessary to be taken as a loan while CCIP is in process of bridging the assets. As soon as the transaction is confirmed by Chainlink Functions on the DST chain, the Orchestrator contract obtains a loan from the Liquidity pool and proceeds to execute all necessary actions, such as destination chain swaps. This is in order to send the destination asset to the user's wallet.
 
-## Orchestrator contract
-
-The Orchestrator contract serves as an operations manager for the entire on-chain system. It's isolating the environment from malicious actors, by exclusively operating each contract in a predetermined order, such that there is no possibility for the end user or any external entity to directly interact with internal contracts of our infrastructure. The Orchestrator provides a single external point of entry for the end user to facilitate cross-chain transactions.
+:::note
+You can read more about our cross-chain infrastructure in the [whitepaper](https://www.concero.io/whitepaper.pdf).
+:::
