@@ -107,9 +107,9 @@ export default defineConfig({
 			],
 		},
 		{
-			text: 'Cross-chain Liquidity Infrastructure',
+			text: 'Liquidity Infrastructure',
 			link: '/cross-chain-liquidity-infrastructure/architecture',
-			collapsed: true,
+			collapsed: false,
 			items: [
 				{
 					text: 'Architecture',
@@ -126,42 +126,42 @@ export default defineConfig({
 				],
 		},
 		{
-			text: 'JS SDK',
-			link: '/concero-js-sdk',
-			items: [
-				{
-					text: 'Overview',
-					link: '/js-sdk/overview',
-				},
-				{
-					text: 'Installation',
-					link: '/js-sdk/installation',
-				},
-				{
-					text: 'Usage',
-					link: '/js-sdk/usage',
-				},
-
-			]
+			text: 'JS SDK (coming soon)',
+			// link: '/concero-js-sdk',
+			// items: [
+			// 	{
+			// 		text: 'Overview',
+			// 		link: '/js-sdk/overview',
+			// 	},
+			// 	{
+			// 		text: 'Installation',
+			// 		link: '/js-sdk/installation',
+			// 	},
+			// 	{
+			// 		text: 'Usage',
+			// 		link: '/js-sdk/usage',
+			// 	},
+			//
+			// ]
 		},
 		{
-			text: 'API Endpoints',
-			link: '/api-endpoints',
-			items: [
-				{
-					text: 'Overview',
-					link: '/api/overview',
-				},
-				{
-					text: 'Routing',
-					link: '/api/routing',
-				},
-				{
-					text: 'Tracking',
-					link: '/api/tracking',
-				},
-
-			]
+			text: 'API Endpoints (coming soon)',
+			// link: '/api-endpoints',
+			// items: [
+			// 	{
+			// 		text: 'Overview',
+			// 		link: '/api/overview',
+			// 	},
+			// 	{
+			// 		text: 'Routing',
+			// 		link: '/api/routing',
+			// 	},
+			// 	{
+			// 		text: 'Tracking',
+			// 		link: '/api/tracking',
+			// 	},
+			//
+			// ]
 		}
 	],
 })
