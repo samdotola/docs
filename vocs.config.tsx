@@ -22,9 +22,9 @@ export default defineConfig({
 		light: '/logo-light.svg',
 		dark: '/logo-dark.svg',
 	},
-	theme: {
-		// accentColor: '#5E43FF',
-	},
+	// theme: {
+	// 	// accentColor: '#5E43FF',
+	// },
 	rootDir:	'docs',
 	ogImageUrl: {
     '/': '/og.png',
@@ -45,7 +45,7 @@ export default defineConfig({
 		},
 		{
 			text: 'Audits (soon)',
-			link: '/what-is-concero',
+			link: '#',
 		},
 	],
 	socials: [
