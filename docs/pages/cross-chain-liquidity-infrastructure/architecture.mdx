@@ -6,11 +6,12 @@ The architecture of liquidity pools involves the Parent Pool, hosted on a single
 ![Logo](/pool-architecture.jpg)
 
 The advantage this architecture brings is the ease of use for the liquidity providers, as the fee is earned universally throughout all the pools, regardless of the volume discrepancies between each pool. The liquidity provider is entitled to a share of earned fees, which is determined in proportion to the amount of LP tokens held by the liquidity provider and the sum of earned fees across every pool in the infrastructure. This approach removes the need of the liquidity provider to transfer the liquidity from low-volume pools, to the ones with greater volume. Additionally, the initial distribution of equal proportions of provided liquidity is taken care of by the Parent pool. In order to interact with the infrastructure as a liquidity provider, all actions are taken exclusively through the Parent Pool.
-
+## Liquidity cap
+The speed of the settlement layer (~24 minutes) allows for a very efficient liquidity usage. This led us to set a liquidity cap for our pools in order to maintain high APY rates and to reduce risks for liquidity providers.
 ## Deposits
 The cross-chain liquidity deposit logic consists of 4 stages with all communication between the LP and the infrastructure taking place in the parent pool. The liquidity infrastructure uses the well-known concept of liquidity tokens, which represent a portion of the liquidity with fees the provider is entitled to.
 
-#### Deposit Flow
+### Deposit Flow
 1. LP deposits the funds into the parent pool
 2. Parent pool uses CLF to fetch liquidity data on all chains in order to determine the LP amount to issue to the depositor
 3. Parent pool receives liquidity data and issues LP tokens in proportion to the deposit, to the liquidity provider
@@ -28,7 +29,7 @@ In order to obtain liquidity that is present on the child pools, the parent pool
 
 After the liquidity has been collected in the parent pool, the liquidity provider can call the completeWithdrawal() function in the parent pool, which will burn the LP tokens that were originally taken and send the liquidity back to the depositor, thus completing the withdrawal process.
 
-#### Withdrawal Flow
+### Withdrawal Flow
 1. LP initiates the withdrawal request and approves LP tokens to spend
 2. Parent pool obtains cross-chain liquidity of child pools using CLF
 3. Parent pool submits a pending withdrawal request to CLA+CLF contract

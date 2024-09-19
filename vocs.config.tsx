@@ -44,7 +44,7 @@ export default defineConfig({
 			link: 'https://www.concero.io/whitepaper.pdf',
 		},
 		{
-			text: 'Audits',
+			text: 'Audits (soon)',
 			link: '/what-is-concero',
 		},
 	],
@@ -68,10 +68,10 @@ export default defineConfig({
 			text: 'What is Concero?',
 			link: '/what-is-concero',
 		},
-		{
-			text: 'Getting Started',
-			link: '/getting-started',
-		},
+		// {
+		// 	text: 'Getting Started',
+		// 	link: '/getting-started',
+		// },
 		{
 			text: 'Infrastructure',
 			collapsed: false,
@@ -83,6 +83,10 @@ export default defineConfig({
 				{
 					text: 'Interface',
 					link: '/cross-chain-infrastructure/interface',
+				},
+				{
+				text: 'Fees',
+					link: '/cross-chain-infrastructure/fees',
 				},
 				{
 					text: 'Architecture',

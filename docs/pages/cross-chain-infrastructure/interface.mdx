@@ -1,5 +1,6 @@
 # Interface
-### swap
+The interface is the main entrypoint for users or protocols to interact with Concero cross-chain infrastructure. It is responsible for executing the entire transaction on a single chain, allowing a user to perform multiple actions with a single function call.
+## swap
 
 ```solidity
 function swap(struct IDexSwap.SwapData[] _swapData, address _receiver) external payable
@@ -14,7 +15,7 @@ Performs a swap on a single chain.
 | _swapData | struct IDexSwap.SwapData[] | the swap payload of type IDexSwap.SwapData[] |
 | _receiver | address | the recipient of the swap |
 
-### bridge
+## bridge
 
 ```solidity
 function bridge(struct IStorage.BridgeData bridgeData, struct IDexSwap.SwapData[] dstSwapData) external payable
@@ -29,7 +30,7 @@ Performs a bridge from the source chain to the destination chain.
 | bridgeData | struct IStorage.BridgeData | bridge payload of type BridgeData |
 | dstSwapData | struct IDexSwap.SwapData[] | destination swap payload. May be empty |
 
-### swapAndBridge
+## swapAndBridge
 
 ```solidity
 function swapAndBridge(struct IStorage.BridgeData bridgeData, struct IDexSwap.SwapData[] srcSwapData, struct IDexSwap.SwapData[] dstSwapData) external payable
